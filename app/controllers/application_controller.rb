@@ -17,4 +17,16 @@ class ApplicationController < ActionController::API
             render json: { errors: e.message }, status: 401
         end
     end
+
+    def authorize_artist
+        if @current_user.role != "artist"
+            render json: { error: 'unauthorized' }, status: 401
+        end
+    end
+
+    def authorize_client
+        if @current_user.role != "client"
+            render json: { error: 'unauthorized' }, status: 401
+        end
+    end
 end

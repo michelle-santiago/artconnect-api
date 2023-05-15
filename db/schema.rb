@@ -10,9 +10,36 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_13_014744) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_15_081901) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "commissions", force: :cascade do |t|
+    t.string "kind"
+    t.decimal "price"
+    t.string "duration"
+    t.string "status"
+    t.string "phase"
+    t.jsonb "log"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "artist_id"
+    t.integer "client_id"
+    t.jsonb "revision"
+    t.integer "request_id"
+  end
+
+  create_table "requests", force: :cascade do |t|
+    t.string "kind"
+    t.decimal "price"
+    t.string "duration"
+    t.string "status", default: "pending"
+    t.string "payment_status", default: "unpaid"
+    t.integer "client_id"
+    t.integer "artist_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "first_name"
