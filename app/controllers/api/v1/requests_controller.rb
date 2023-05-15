@@ -20,8 +20,6 @@ module Api
 
       def update
         @request = Request.where("id = ? AND artist_id = ?", params[:id], @current_user.id).first
-        print "banana"
-        print @request.inspect
         if @request.update(status_params)
           if @request.status === "approved"
             @commission = @current_user.commissions.find_by_request_id(@request.id)
@@ -53,8 +51,8 @@ module Api
 			end
 
       def update_payment
-        @request = @current_user.requests.find(params[:id])
-        if @request.update(payment_params)
+        @request = Request.where("id = ? AND artist_id = ?", params[:id], @current_user.id).first
+        if @request.update!(payment_params)
           render json: @request, status: 201
         else
           render json: { errors: @request.errors.full_messages}, status: 500   
