@@ -11,11 +11,11 @@ module Api
 						if @user.save
 							render json: @user, status: 201            
 						else
-							render json: { errors: @user.errors.full_messages}, status: 500
+							render json: { errors: @user.errors.full_messages}, status: 422
 						end
 					end
 				else
-					render json: { errors: @user.errors.full_messages}, status: 500   
+					render json: { errors: @user.errors.full_messages}, status: 422   
 				end
 			end
 

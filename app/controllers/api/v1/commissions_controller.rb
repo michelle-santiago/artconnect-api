@@ -5,7 +5,12 @@ module Api
 			before_action :authorize_artist, only: [:create, :update]
 
 			def index
-				render json: { welcome: "commission" }, status: 201 
+					if @current_user.role === "artist"
+						@commissions = @current_user.commissions
+					else
+						@commissions = Commission.where("client_id = ?", @current_user.id)
+					end
+					render json: @commissions, status: 200 
 			end
 
 			def create
@@ -13,7 +18,7 @@ module Api
 				if @commission.save
 					render json: @commission, status: 201
 				else 
-					render json: { errors: @commission.errors.full_messages}, status: 500   
+					render json: { errors: @commission.errors.full_messages}, status: 422   
 				end
 			end
 
@@ -22,7 +27,7 @@ module Api
         if @commission.update(commission_params)
           render json: @commission, status: 201
         else
-          render json: { errors: @request.errors.full_messages}, status: 500   
+          render json: { errors: @commission.errors.full_messages}, status: 422   
         end
       end
 

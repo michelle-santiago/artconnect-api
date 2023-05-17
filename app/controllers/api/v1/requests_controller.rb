@@ -6,7 +6,12 @@ module Api
       before_action :authorize_artist, only: [:update, :update_payment]
 
 			def index
-				render json: { welcome: "request" }, status: 201 
+        if @current_user.role === "client"
+          @requests = @current_user.requests
+        else
+          @requests = Request.where("artist_id = ?", @current_user.id)
+        end
+				render json: @requests, status: 200 
 			end
 
 			def create
@@ -27,9 +32,9 @@ module Api
               @current_user.commissions.create!(kind: @request.kind, price: @request.price, duration: @request.duration, client_id: @request.client_id, request_id: @request.id, status: "in progress", phase: "sketch")
             end
           end
-          render json: @request, status: 201
+          render json: @request, status: 200
         else
-          render json: { errors: @request.errors.full_messages}, status: 500   
+          render json: { errors: @request.errors.full_messages}, status: 422  
         end
       end
 
@@ -42,9 +47,9 @@ module Api
             render json: { error: "unauthorized" }, status: 401
           else 
             if @request.update(status_params)
-              render json: @request, status: 201
+              render json: @request, status: 200
             else
-              render json: { errors: @request.errors.full_messages}, status: 500   
+              render json: { errors: @request.errors.full_messages}, status: 422   
             end
           end
         end
@@ -55,7 +60,7 @@ module Api
         if @request.update!(payment_params)
           render json: @request, status: 201
         else
-          render json: { errors: @request.errors.full_messages}, status: 500   
+          render json: { errors: @request.errors.full_messages}, status: 422   
         end		
 			end
 

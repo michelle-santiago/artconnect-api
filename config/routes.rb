@@ -12,7 +12,7 @@ Rails.application.routes.draw do
       resources :commissions, only: [:index, :create, :update, :show]
       resources :requests, only: [:index, :create, :update, :show]
       patch '/requests/:id/:payment_status' => 'requests#update_payment'
-      patch '/requests/:id/:status' => 'requests#cancel'
+      patch '/requests/:id/:status/client' => 'requests#cancel'
     end
   end
 

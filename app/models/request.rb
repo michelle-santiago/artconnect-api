@@ -2,6 +2,6 @@ class Request < ApplicationRecord
 
   belongs_to :client, class_name: "User"
 
-  validates(:kind, :price, :duration, presence: true)
+  validates(:kind, :price, :duration, :status, :payment_status, presence: true)
   
 end

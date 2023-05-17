@@ -1,9 +1,9 @@
 module Api
 	module V1
-		class ArtistController < ApplicationController
+		class ArtistsController < ApplicationController
 			def index
-				@artists = Users.where(role: 'artist')
-				render json: { data: @artists.username }, status: 200
+				@artists = User.where(role: 'artist').select("id,username")
+				render json: @artists, status: 200
 			end
 		end
 	end

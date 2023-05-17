@@ -4,8 +4,8 @@ module Api
 			skip_before_action :authenticate_user, only: [:sign_in]
 			
 			def sign_in
-				if user_params[:email].empty? || user_params[:password].empty?
-					render json: { error: "Fields can't be blank", status: 500 }
+				if user_params[:email].blank? || user_params[:password].blank? 
+					render json: { error: "Fields can't be blank" }, status: 422
 				else
 					@user = User.find_by_email(user_params[:email])
 					if @user&.authenticate(user_params[:password])
@@ -14,7 +14,7 @@ module Api
 							render json: { token: token, exp: time.strftime("%m-%d-%Y %H:%M"),
 														 username: @user.username }, status: 200
 					else
-							render json: { error: "Invalid email/password credentials", status: 401 }
+							render json: { error: "Invalid email/password credentials" }, status: 401
 					end
 				end
 			end
