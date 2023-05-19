@@ -29,7 +29,7 @@ module Api
           if @request.status === "approved"
             @commission = @current_user.commissions.find_by_request_id(@request.id)
             if @commission.blank?
-              @commission_created = @current_user.commissions.create!(kind: @request.kind, price: @request.price, duration: @request.duration, client_id: @request.client_id, request_id: @request.id)
+              @commission_created = @current_user.commissions.create!(commission_params)
               @commission_created.add_process! 
             end
           end
@@ -69,6 +69,10 @@ module Api
 
 			def request_params
 				params.permit(:kind, :price, :duration, :artist_id)
+			end
+
+      def commission_params
+				params.permit(:kind, :price, :duration, :request_id, :client_id)
 			end
 
       def payment_params
