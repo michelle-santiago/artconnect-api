@@ -25,11 +25,12 @@ module Api
 
       def update
         @request = Request.where("id = ? AND artist_id = ?", params[:id], @current_user.id).first
-        if @request.update(status_params)
+        if @request.update!(status_params)
           if @request.status === "approved"
             @commission = @current_user.commissions.find_by_request_id(@request.id)
             if @commission.blank?
-              @current_user.commissions.create!(kind: @request.kind, price: @request.price, duration: @request.duration, client_id: @request.client_id, request_id: @request.id, status: "in progress", phase: "sketch")
+              @commission_created = @current_user.commissions.create!(kind: @request.kind, price: @request.price, duration: @request.duration, client_id: @request.client_id, request_id: @request.id)
+              @commission_created.add_process! 
             end
           end
           render json: @request, status: 200
@@ -43,10 +44,10 @@ module Api
         if @request.status === "approved" 
           render json: { error: "unauthorized" }, status: 401   
         else
-          if status_params[:status] != "cancelled"
+          if params[:status] != "cancelled"
             render json: { error: "unauthorized" }, status: 401
           else 
-            if @request.update(status_params)
+            if @request.update!(status: params[:status])
               render json: @request, status: 200
             else
               render json: { errors: @request.errors.full_messages}, status: 422   

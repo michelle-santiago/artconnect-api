@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_15_081901) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_18_233421) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -19,14 +19,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_15_081901) do
     t.decimal "price"
     t.string "duration"
     t.string "status"
-    t.string "phase"
-    t.jsonb "log"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "artist_id"
     t.integer "client_id"
     t.jsonb "revision"
     t.integer "request_id"
+    t.string "phase"
+    t.jsonb "process", array: true
   end
 
   create_table "requests", force: :cascade do |t|

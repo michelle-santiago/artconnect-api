@@ -10,9 +10,12 @@ Rails.application.routes.draw do
       get 'artists' => 'artists#index'
 
       resources :commissions, only: [:index, :create, :update, :show]
+      patch '/commissions/:id/process' => 'commissions#update_process'
+      
       resources :requests, only: [:index, :create, :update, :show]
       patch '/requests/:id/:payment_status' => 'requests#update_payment'
-      patch '/requests/:id/:status/client' => 'requests#cancel'
+      patch '/requests/:id/:status/edit' => 'requests#cancel'
+     
     end
   end
 
