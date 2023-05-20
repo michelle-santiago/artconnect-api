@@ -6,7 +6,7 @@ module Api
       before_action :authorize_artist, only: [:update, :update_payment]
 
 			def index
-        if @current_user.role === "client"
+        if @current_user.role == "client"
           @requests = @current_user.requests
         else
           @requests = Request.where("artist_id = ?", @current_user.id)
@@ -26,11 +26,11 @@ module Api
       def update
         @request = Request.where("id = ? AND artist_id = ?", params[:id], @current_user.id).first
         if @request.update!(status_params)
-          if @request.status === "approved"
+          if @request.status == "approved"
             @commission = @current_user.commissions.find_by_request_id(@request.id)
             if @commission.blank?
               @commission_created = @current_user.commissions.create!(commission_params)
-              @commission_created.add_process! 
+              @commission_created.add_process!(process_params) 
             end
           end
           render json: @request, status: 200
@@ -41,7 +41,7 @@ module Api
 
 			def cancel
         @request = @current_user.requests.find(params[:id])
-        if @request.status === "approved" 
+        if @request.status == "approved" 
           render json: { error: "unauthorized" }, status: 401   
         else
           if params[:status] != "cancelled"
@@ -72,7 +72,11 @@ module Api
 			end
 
       def commission_params
-				params.permit(:kind, :price, :duration, :request_id, :client_id)
+				params.permit(:kind, :price, :duration, :request_id, :client_id, :c_status)
+			end
+
+      def process_params
+				params.permit(:phase, :p_price, :remarks, :payment_status, :p_status)
 			end
 
       def payment_params

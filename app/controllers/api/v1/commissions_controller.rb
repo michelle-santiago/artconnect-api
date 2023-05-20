@@ -2,10 +2,10 @@
 module Api
 	module V1
 		class CommissionsController < ApplicationController
-			before_action :authorize_artist, only: [:create, :update, :update_process]
+			before_action :authorize_artist, only: [:create, :update, :add_process, :update_process, :complete_process]
 
 			def index
-					if @current_user.role === "artist"
+					if @current_user.role == "artist"
 						@commissions = @current_user.commissions
 					else
 						@commissions = Commission.where("client_id = ?", @current_user.id)
@@ -31,21 +31,47 @@ module Api
         end
       end
 
-			def update_process
-				print "teal"
-				print Commission.find(params[:id])
+			def add_process
 				@commission = @current_user.commissions.find(params[:id])
-				if @commission.process.last["status"] === "pending"
-					render json: { error: "You have a pending process below, complete it first"}, status: 422  
+				if @commission.process.last["status"] == "pending"
+					render json: { error: "You have a pending process below, complete it first"}, status: 422
 				else
-					if @commission.update!(commission_params)
-						@commission.update_process!(process_params)
-						render json: @commission, status: 201
+					if @commission.process_repeatable?(process_params)
+						if @commission.add_process!(process_params)
+							render json: @commission, status: 200
+						else
+							render json: { errors: @commission.errors.full_messages}, status: 422   
+						end
+					else
+						render json: { error: "#{process_params[:phase]} already exists!" }, status: 422
+					end
+				end
+			end
+
+			def update_process
+				@commission = @current_user.commissions.find(params[:id])
+				if @commission.process.last["status"] == "completed"
+					render json: { error: "Process already completed, you cannot edit anymore"}, status: 422
+				else
+					if @commission.update_process!(process_params.except(:phase))
+						render json: @commission, status: 200
 					else
 						render json: { errors: @commission.errors.full_messages}, status: 422   
 					end
 				end
 			end
+
+			def complete_process
+				@commission = @current_user.commissions.find(params[:id])
+				if @commission.process.last["status"] == "completed"
+					render json: { error: "Process already completed, you cannot edit anymore"}, status: 422
+				else
+					if @commission.complete_process!
+						render json: @commission, status: 200 
+					end
+				end
+			end
+
 
 			private 
 
@@ -54,7 +80,7 @@ module Api
 			end
 
 			def process_params
-				params.permit(:kind, :price, :duration, :phase, :revision_price, :remarks)
+				params.permit(:phase, :p_price, :remarks, :payment_status, :p_status)
 			end
 		end
 	end
