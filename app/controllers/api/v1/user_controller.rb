@@ -7,7 +7,7 @@ module Api
 			def sign_up
 				@user = User.new(user_params)
 				if @user.valid?
-					if @user.password === user_params[:password_confirmation]
+					if @user.password == user_params[:password_confirmation]
 						if @user.save
 							render json: @user, status: 201            
 						else
