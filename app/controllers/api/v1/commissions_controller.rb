@@ -8,7 +8,7 @@ module Api
 					if @current_user.role == "artist"
 						@commissions = @current_user.commissions
 					else
-						@commissions = Commission.where("client_id = ?", @current_user.id)
+						@commissions = @current_user.commissioned_arts
 					end
 					render json: @commissions, status: 200 
 			end

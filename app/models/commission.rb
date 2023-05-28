@@ -1,6 +1,9 @@
 class Commission < ApplicationRecord
 
   belongs_to :artist, class_name: "User"
+  belongs_to :client, class_name: "User", optional: true
+
+  has_many   :messages, foreign_key: "commission_id", class_name: "Message"
 
   validates :kind, presence: true
   validates(:price, :duration, presence: true)
@@ -14,8 +17,7 @@ class Commission < ApplicationRecord
   end
 
   def add_process!(process)
-    print "length"
-    if self.process.length < 1
+    if self.process.nil?
       self.process =  [{ phase: process[:phase], datetime: DateTime.now, price: process[:p_price], payment_status: process[:payment_status], remarks: process[:remarks], status: process[:p_status]}]
     else
       self.process.append({ phase: process[:phase], datetime: DateTime.now, price: process[:p_price], payment_status: process[:payment_status], remarks: process[:remarks], status: process[:p_status]})

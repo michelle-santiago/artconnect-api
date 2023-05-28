@@ -9,7 +9,7 @@ module Api
         if @current_user.role == "client"
           @requests = @current_user.requests
         else
-          @requests = Request.where("artist_id = ?", @current_user.id)
+          @requests = @current_user.requests_received
         end
 				render json: @requests, status: 200 
 			end
@@ -24,7 +24,7 @@ module Api
 			end
 
       def update
-        @request = Request.where("id = ? AND artist_id = ?", params[:id], @current_user.id).first
+        @request = @current_user.requests_received.find(params[:id])
         if @request.update!(status_params)
           if @request.status == "approved"
             @commission = @current_user.commissions.find_by_request_id(@request.id)
@@ -57,7 +57,7 @@ module Api
 			end
 
       def update_payment
-        @request = Request.where("id = ? AND artist_id = ?", params[:id], @current_user.id).first
+        @request =  @current_user.requests.find(params[:id])
         if @request.update!(payment_params)
           render json: @request, status: 201
         else
@@ -72,7 +72,7 @@ module Api
 			end
 
       def commission_params
-				params.permit(:kind, :price, :duration, :request_id, :client_id, :c_status)
+				params.permit(:kind, :price, :duration, :request_id, :client_id, :status)
 			end
 
       def process_params
