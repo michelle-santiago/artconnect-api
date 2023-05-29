@@ -1,6 +1,8 @@
 class User < ApplicationRecord
 
 	has_secure_password
+	
+	has_one_attached :avatar
 
 	has_many  :commissions, foreign_key: "artist_id", class_name: "Commission"
 	has_many  :commissioned_arts, foreign_key: "client_id", class_name: "Commission"
