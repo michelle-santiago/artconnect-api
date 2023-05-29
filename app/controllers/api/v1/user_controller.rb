@@ -9,6 +9,7 @@ module Api
 				if @user.valid?
 					if @user.password == user_params[:password_confirmation]
 						if @user.save
+							@user.avatar.present? && @user.update!(avatar_url: url_for(@user.avatar))
 							render json: @user, status: 201            
 						else
 							render json: { errors: @user.errors.full_messages}, status: 422
