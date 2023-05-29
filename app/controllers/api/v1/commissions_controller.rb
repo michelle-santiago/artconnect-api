@@ -5,17 +5,18 @@ module Api
 			before_action :authorize_artist, only: [:create, :update, :add_process, :update_process, :complete_process]
 
 			def index
-					if @current_user.role == "artist"
-						@commissions = @current_user.commissions
-					else
-						@commissions = @current_user.commissioned_arts
-					end
-					render json: @commissions, status: 200 
+				if @current_user.role == "artist"
+					@commissions = @current_user.commissions
+				else
+					@commissions = @current_user.commissioned_arts
+				end
+				render json: @commissions, status: 200 
 			end
 
 			def create
 				@commission = @current_user.commissions.new(commission_params)
 				if @commission.save
+					@commission.image.present? && @commission.update!(image_url: url_for(@commission.image))
 					render json: @commission, status: 201
 				else 
 					render json: { errors: @commission.errors.full_messages}, status: 422   
@@ -30,6 +31,11 @@ module Api
           render json: { errors: @commission.errors.full_messages}, status: 422   
         end
       end
+
+			def show
+				@commissions = Commission.where(artist_id: params[:id], status: nil)
+				render json: @commissions, status: 200 
+			end
 
 			def add_process
 				@commission = @current_user.commissions.find(params[:id])
@@ -76,7 +82,7 @@ module Api
 			private 
 
 			def commission_params
-				params.permit(:kind, :price, :duration)
+				params.permit(:kind, :price, :duration, :image)
 			end
 
 			def process_params

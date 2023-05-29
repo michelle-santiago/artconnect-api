@@ -6,6 +6,16 @@ module Api
 				
 				render json: @artists, status: 200
 			end
+
+			def show
+				@artist = User.select("id, first_name, last_name, email, username, about, max_slot, terms, avatar_url").find(params[:id])
+				
+				render json: @artist, status: 200
+			end
+
+			def update
+
+			end
 		end
 	end
 end

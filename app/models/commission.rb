@@ -3,6 +3,8 @@ class Commission < ApplicationRecord
   belongs_to :artist, class_name: "User"
   belongs_to :client, class_name: "User", optional: true
 
+  has_one_attached :image
+
   has_many   :messages, foreign_key: "commission_id", class_name: "Message"
 
   validates :kind, presence: true

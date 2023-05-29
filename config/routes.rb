@@ -7,7 +7,8 @@ Rails.application.routes.draw do
       post '/sign_up' => 'user#sign_up'
       
       get 'home' => 'home#index'
-      get 'artists' => 'artists#index'
+
+      resources :artists, only: [:index, :show, :update]
 
       resources :commissions, only: [:index, :create, :update, :show]
       patch '/commissions/:id/add_process' => 'commissions#add_process'
