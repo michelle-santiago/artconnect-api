@@ -40,7 +40,7 @@ module Api
       end
 
 			def cancel
-        @request = @current_user.requests_received.find(params[:id])
+        @request = @current_user.requests.find(params[:id])
         if @request.status == "approved" 
           render json: { error: "unauthorized" }, status: 401   
         else
@@ -57,7 +57,7 @@ module Api
 			end
 
       def update_payment
-        @request =  @current_user.requests.find(params[:id])
+        @request =  @current_user.requests_received.find(params[:id])
         if @request.update!(payment_params)
           render json: @request, status: 201
         else
