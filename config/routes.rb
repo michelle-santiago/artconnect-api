@@ -14,7 +14,7 @@ Rails.application.routes.draw do
       patch '/commissions/:id/add_process' => 'commissions#add_process'
       patch '/commissions/:id/update_process' => 'commissions#update_process'
       patch '/commissions/:id/complete_process' => 'commissions#complete_process'
-      
+      patch '/commissions/:id/complete_status' => 'commissions#complete_status'
 
       resources :requests, only: [:index, :create, :update, :show]
       patch '/requests/:id/:payment_status' => 'requests#update_payment'

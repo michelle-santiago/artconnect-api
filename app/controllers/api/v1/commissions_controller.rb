@@ -2,7 +2,7 @@
 module Api
 	module V1
 		class CommissionsController < ApplicationController
-			before_action :authorize_artist, only: [:create, :update, :add_process, :update_process, :complete_process]
+			before_action :authorize_artist, only: [:create, :update, :add_process, :update_process, :complete_process, :complete_status]
 
 			def index
 				if @current_user.role == "artist"
@@ -79,6 +79,14 @@ module Api
 				end
 			end
 
+			def complete_status
+        @commission =  @current_user.commissions.find(params[:id])
+        if @commission.update!(status: "completed")
+          render json: @commission, status: 200
+        else
+          render json: { errors: @commission.errors.full_messages}, status: 422   
+        end		
+			end
 
 			private 
 
@@ -89,6 +97,7 @@ module Api
 			def process_params
 				params.permit(:phase, :p_price, :remarks, :payment_status, :p_status)
 			end
+
 		end
 	end
 end
