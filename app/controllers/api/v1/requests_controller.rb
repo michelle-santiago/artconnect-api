@@ -68,11 +68,11 @@ module Api
 			private 
 
 			def request_params
-				params.permit(:kind, :price, :duration, :artist_id)
+				params.permit(:kind, :price, :duration, :artist_id, :image_url)
 			end
 
       def commission_params
-				params.permit(:kind, :price, :duration, :request_id, :client_id, :status)
+				params.permit(:kind, :price, :duration, :request_id, :client_id, :status, :image_url)
 			end
 
       def process_params

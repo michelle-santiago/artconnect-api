@@ -26,6 +26,7 @@ module Api
       def update
         @commission = @current_user.commissions.find(params[:id])
         if @commission.update!(commission_params)
+					@commission.image.present? && @commission.update!(image_url: url_for(@commission.image))
           render json: @commission, status: 201
         else
           render json: { errors: @commission.errors.full_messages}, status: 422   
