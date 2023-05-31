@@ -40,7 +40,7 @@ module Api
       end
 
 			def cancel
-        @request = @current_user.requests.find(params[:id])
+        @request = @current_user.requests_received.find(params[:id])
         if @request.status == "approved" 
           render json: { error: "unauthorized" }, status: 401   
         else
