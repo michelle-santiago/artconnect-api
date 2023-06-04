@@ -8,7 +8,7 @@ module Api
 			end
 
 			def show
-				@artist = User.select("id, first_name, last_name, email, username, about, max_slot, terms, avatar_url").find(params[:id])
+				@artist = User.select("id, first_name, last_name, email, username, about, max_slot, terms, avatar_url").find_by_username(params[:id])
 				
 				render json: @artist, status: 200
 			end
