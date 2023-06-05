@@ -7,7 +7,8 @@ Rails.application.routes.draw do
       post '/sign_up' => 'user#sign_up'
       patch '/about'  => 'user#about'
       patch '/terms'  => 'user#terms'
-      
+      patch '/max_slot'  => 'user#max_slot'
+
       get 'home' => 'home#index'
 
       resources :artists, only: [:index, :show, :update]

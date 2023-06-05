@@ -30,6 +30,7 @@ module Api
             @commission = @current_user.commissions.find_by_request_id(@request.id)
             if @commission.blank?
               @commission_created = @current_user.commissions.create!(commission_params)
+              @commission_created.update!(status: "in progress")
               @commission_created.add_process!(process_params) 
             end
           end
@@ -72,7 +73,7 @@ module Api
 			end
 
       def commission_params
-				params.permit(:kind, :price, :duration, :request_id, :client_id, :status, :image_url)
+				params.permit(:kind, :price, :duration, :request_id, :client_id, :image_url)
 			end
 
       def process_params

@@ -3,7 +3,7 @@ module Api
 	module V1
 		class UserController < ApplicationController
 			skip_before_action :authenticate_user, only: [:sign_up]
-			before_action :authorize_artist, only: [:about, :terms]
+			before_action :authorize_artist, only: [:about, :terms, :max_slot]
 
 			def sign_up
 				@user = User.new(user_params)
@@ -37,6 +37,14 @@ module Api
 				end
 			end
 
+			def max_slot
+				if @current_user.update!(max_slot: slot_params[:max_slot])
+					render json: { max_slot: @current_user.max_slot }, status: 200
+        else
+          render json: { errors: @current_user.errors.full_messages}, status: 422   
+				end
+			end
+
 			private
 
 			def user_params
@@ -49,6 +57,10 @@ module Api
 
 			def terms_params
 				params.permit(:terms)
+			end
+
+			def slot_params
+				params.permit(:max_slot)
 			end
 		end
 	end
