@@ -5,6 +5,8 @@ Rails.application.routes.draw do
       post '/sign_in' => 'authentication#sign_in'
   
       post '/sign_up' => 'user#sign_up'
+      patch '/about'  => 'user#about'
+      patch '/terms'  => 'user#terms'
       
       get 'home' => 'home#index'
 
