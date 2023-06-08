@@ -7,7 +7,8 @@
 # note to self! set up origin later
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins "*"
+    origins ["https://artconnect.vercel.app
+    ","https://artconnect-git-master-michelle-santiago.vercel.app", "https://artconnect-jnst2svif-michelle-santiago.vercel.app"]
 
     resource "*",
       headers: :any,
