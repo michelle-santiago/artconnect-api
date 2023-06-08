@@ -5,13 +5,12 @@ module Api
 
 			def index
 				if msg_params[:kind] =="commission"
-					@messages = Message.where("kind = ? and ( commission_id = ? or request_id = ? ) and (sender_id = ? or receiver_id = ?)", 
-					msg_params[:kind], msg_params[:commission_id], msg_params[:request_id], @current_user.id, @current_user.id)
+					@messages = Message.where(kind: msg_params[:kind], request_id: msg_params[:request_id]).sort
 				else
-					@messages = Message.where("kind = ? and (sender_id = ? or receiver_id = ?) and (sender_id = ? or receiver_id = ?)", 
-					msg_params[:kind], @current_user.id, @current_user.id, msg_params[:receiver_id], msg_params[:receiver_id])
+					@messages = @current_user.messages.where(kind: msg_params[:kind]).or(@current_user.received_messages.where(kind: msg_params[:kind], sender: msg_params[:receiver_id] ))
 				end
-				render json: @messages, status: 200
+				@receiver = User.select("id, first_name, last_name, email, username, avatar_url").find(msg_params[:receiver_id])
+				render json: {messages: @messages, receiver: @receiver}, status: 200
 			end
 
 			def create
@@ -23,7 +22,7 @@ module Api
 					else
 						@chat_id = [@message.request_id, @message.sender_id, @message.receiver_id].sort.join
 					end
-					ActionCable.server.broadcast(@channel, { id: @message.id, body: @message.body, chat_id: @chat_id })
+					ActionCable.server.broadcast("#{@channel}#{@chat_id}", { id: @chat_id, body: @message})
 					render json: @message, status: 201
 				else 
 					render json: { errors: @message.errors.full_messages}, status: 500   

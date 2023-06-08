@@ -9,7 +9,7 @@ class User < ApplicationRecord
 	has_many  :requests, foreign_key: "client_id", class_name: "Request"
 	has_many  :requests_received, foreign_key: "artist_id", class_name: "Request"
 	has_many  :messages, foreign_key: "sender_id", class_name: "Message"
-
+	has_many  :received_messages, foreign_key: "receiver_id", class_name: "Message"
 	validates :username, uniqueness: { case_sensitive: false }, presence: true
 	validates :email, uniqueness: { case_sensitive: false }, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP } 
 	validates :password, presence: true, length: { in: 6..20 }, unless: -> { password.blank? }
