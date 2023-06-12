@@ -24,6 +24,8 @@ Rails.application.routes.draw do
       patch '/requests/:id/:status/edit' => 'requests#cancel'
 
       resources :messages, only: [:index, :create]
+
+      resources :contacts, only: [:index]
      
     end
   end
