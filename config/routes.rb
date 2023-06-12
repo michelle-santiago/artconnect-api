@@ -13,7 +13,7 @@ Rails.application.routes.draw do
 
       resources :artists, only: [:index, :show, :update]
 
-      resources :commissions, only: [:index, :create, :update, :show]
+      resources :commissions, only: [:index, :create, :update]
       patch '/commissions/:id/add_process' => 'commissions#add_process'
       patch '/commissions/:id/update_process' => 'commissions#update_process'
       patch '/commissions/:id/complete_process' => 'commissions#complete_process'

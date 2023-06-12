@@ -17,6 +17,8 @@ module Api
 				@message = @current_user.messages.new(msg_params)
 				@channel = "#{msg_params[:kind]}_channel"
 				if @message.save
+					print "test"
+					print @message.inspect
 					if msg_params[:kind] == "direct"
 						@chat_id = [@message.sender_id, @message.receiver_id].sort.join
 					else

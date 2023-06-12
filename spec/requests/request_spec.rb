@@ -59,7 +59,7 @@ RSpec.describe "requests", type: :request do
     context "with valid parameters" do 
       it "creates a new Request" do
         expect {
-          post api_v1_requests_url , headers: { Authorization: jwt_encode(client) }, params: { kind: request.kind, price: request.price, duration: request.duration }
+          post api_v1_requests_url , headers: { Authorization: jwt_encode(client) }, params: { kind: request.kind, price: request.price, duration: request.duration, artist_id: artist.id }
         }.to change(Request, :count).by(1)
         request_tb = Request.last
         expect(request_tb.kind).to eq(request.kind)
@@ -80,7 +80,7 @@ RSpec.describe "requests", type: :request do
   describe "PATCH /update status as artist" do
     context "with missing parameters" do 
       it "does not update Request" do
-        patch "/api/v1/requests/#{ new_request.id }?status", headers: { Authorization: jwt_encode(artist) }
+        patch "/api/v1/requests/#{ new_request.id }?status=null", headers: { Authorization: jwt_encode(artist) }
         expect(response).to have_http_status(422)
       end
     end
@@ -130,7 +130,7 @@ RSpec.describe "requests", type: :request do
   describe "PATCH /cancel as an client" do
     context "with valid parameters" do 
       it "cancels the Request" do
-        patch "/api/v1/requests/#{ new_request.id }/cancelled/client", headers: { Authorization: jwt_encode(client) }
+        patch "/api/v1/requests/#{ new_request.id }/cancelled/edit", headers: { Authorization: jwt_encode(client) }
         request_tb = Request.find(new_request.id)
         request_tb.reload
         expect(request_tb.status).to eq("cancelled")
@@ -141,7 +141,7 @@ RSpec.describe "requests", type: :request do
   describe "PATCH /cancel as an client" do
     context "with approved status" do 
       it "does not cancel the Request" do
-        patch "/api/v1/requests/#{ approved_request.id }/cancelled/client", headers: { Authorization: jwt_encode(client) }
+        patch "/api/v1/requests/#{ approved_request.id }/cancelled/edit", headers: { Authorization: jwt_encode(client) }
         expect(JSON.parse(response.body)["error"]).to eq("unauthorized")
         expect(response).to have_http_status(401)
       end
@@ -151,7 +151,7 @@ RSpec.describe "requests", type: :request do
   describe "PATCH /cancel as an client" do
     context "with status other than cancelled" do 
       it "does not cancel the Request" do
-        patch "/api/v1/requests/#{ new_request.id }/approved/client", headers: { Authorization: jwt_encode(client) }
+        patch "/api/v1/requests/#{ new_request.id }/approved/edit", headers: { Authorization: jwt_encode(client) }
         expect(JSON.parse(response.body)["error"]).to eq("unauthorized")
         expect(response).to have_http_status(401)
       end

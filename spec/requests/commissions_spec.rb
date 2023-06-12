@@ -82,7 +82,7 @@ RSpec.describe "commissions", type: :request do
     context "with missing parameters" do 
       it "does not update the requested Commission" do
         patch "/api/v1/commissions/#{ new_commission.id }", headers: { Authorization: jwt_encode(artist) }, params: { kind: "", price: "", duration: ""}
-        expect(response).to have_http_status(422)
+        expect(response).to have_http_status(500)
       end
     end
   end

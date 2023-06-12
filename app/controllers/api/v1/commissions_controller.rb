@@ -33,11 +33,6 @@ module Api
         end
       end
 
-			def show
-				@commissions = Commission.where(artist_id: params[:id], status: nil)
-				render json: @commissions, status: 200 
-			end
-
 			def add_process
 				@commission = @current_user.commissions.find(params[:id])
 				if @commission.process.last["status"] == "pending"

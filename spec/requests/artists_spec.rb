@@ -34,4 +34,38 @@ RSpec.describe "artists", type: :request do
     end
   end
 
+  describe "GET /show artist" do
+    it "renders a successful response" do
+      get "/api/v1/artists/#{artist.id }", headers: { Authorization: jwt_encode(client) }
+      expect(response).to have_http_status(200)
+    end
+  end
+
+  describe "PATCH /update about as an artist" do
+    context "with valid parameters" do 
+      it "renders a successful response" do
+        patch "/api/v1/about", headers: { Authorization: jwt_encode(artist) }, params: { about: "my about"}
+        expect(response).to have_http_status(200)
+      end
+    end
+  end
+
+  describe "PATCH /update terms as an artist" do
+    context "with valid parameters" do 
+      it "renders a successful response" do
+        patch "/api/v1/terms", headers: { Authorization: jwt_encode(artist) }, params: { about: "my terms"}
+        expect(response).to have_http_status(200)
+      end
+    end
+  end
+
+  describe "PATCH /update max_slot as an artist" do
+    context "with valid parameters" do 
+      it "renders a successful response" do
+        patch "/api/v1/max_slot", headers: { Authorization: jwt_encode(artist) }, params: { about: "my slots"}
+        expect(response).to have_http_status(200)
+      end
+    end
+  end
+
 end
