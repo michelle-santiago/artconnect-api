@@ -100,4 +100,10 @@ RSpec.describe "commissions", type: :request do
     end
   end
 
+  describe "GET /show commissions as artist" do
+    it "renders a successful response" do
+      get "/api/v1/commissions/#{ artist.id }", headers: { Authorization: jwt_encode(artist) }
+      expect(response).to have_http_status(200)
+    end
+  end
 end
