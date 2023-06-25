@@ -7,7 +7,7 @@
 # note to self! set up origin later
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins "https://artconnect.vercel.app"
+    origins "http://localhost:5173"
     resource "*",
       headers: :any,
       methods: [:get, :post, :put, :patch, :delete, :options, :head]
