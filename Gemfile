@@ -62,3 +62,5 @@ end
 
 gem 'rubocop', require: false
 gem 'rouge'
+gem 'cloudinary'
+gem 'dotenv-rails'
