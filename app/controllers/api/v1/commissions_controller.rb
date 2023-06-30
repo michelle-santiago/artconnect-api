@@ -40,24 +40,20 @@ module Api
 
 			def add_process
 				@commission = @current_user.commissions.find(params[:id])
-				if @commission.process.last["status"] == "pending"
+				if @commission.process.last["p_status"] == "pending"
 					render json: { error: "You have a pending process below, complete it first"}, status: 422
 				else
-					if @commission.process_repeatable?(process_params)
-						if @commission.add_process!(process_params)
-							render json: @commission, status: 200
-						else
-							render json: { errors: @commission.errors.full_messages}, status: 422   
-						end
+					if @commission.add_process!(process_params)
+						render json: @commission, status: 200
 					else
-						render json: { error: "#{process_params[:phase]} already exists!" }, status: 422
+						render json: { errors: @commission.errors.full_messages}, status: 422   
 					end
 				end
 			end
 
 			def update_process
 				@commission = @current_user.commissions.find(params[:id])
-				if @commission.process.last["status"] == "completed"
+				if @commission.process.last["p_status"] == "completed"
 					render json: { error: "Process already completed, you cannot edit anymore"}, status: 422
 				else
 					if @commission.update_process!(process_params.except(:phase))
@@ -70,7 +66,7 @@ module Api
 
 			def complete_process
 				@commission = @current_user.commissions.find(params[:id])
-				if @commission.process.last["status"] == "completed"
+				if @commission.process.last["p_status"] == "completed"
 					render json: { error: "Process already completed, you cannot edit anymore"}, status: 422
 				else
 					if @commission.complete_process!

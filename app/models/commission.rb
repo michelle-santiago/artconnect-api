@@ -10,30 +10,22 @@ class Commission < ApplicationRecord
   validates :kind, presence: true
   validates(:price, :duration, presence: true)
 
-  def process_repeatable?(process)
-    if process[:phase] == "revision"
-      return true
-    else
-      self.process.any? { |p| p["phase"] != process[:phase] }
-    end
-  end
-
   def add_process!(process)
     if self.process.nil?
-      self.process =  [{ phase: process[:phase], datetime: DateTime.now, price: process[:p_price], payment_status: process[:payment_status], remarks: process[:remarks], status: process[:p_status]}]
+      self.process =  [{ phase: process[:phase], datetime: DateTime.now, p_price: process[:p_price], payment_status: process[:payment_status], remarks: process[:remarks], p_status: process[:p_status]}]
     else
-      self.process.append({ phase: process[:phase], datetime: DateTime.now, price: process[:p_price], payment_status: process[:payment_status], remarks: process[:remarks], status: process[:p_status]})
+      self.process.append({ phase: process[:phase], datetime: DateTime.now, p_price: process[:p_price], payment_status: process[:payment_status], remarks: process[:remarks], p_status: process[:p_status]})
     end
     self.save
   end
   
   def complete_process!
-    self.process.last["status"] = "completed"
+    self.process.last["p_status"] = "completed"
     self.save
   end
 
   def update_process!(process)
-    self.process[ self.process.length - 1] = { phase: self.process.last["phase"], datetime: DateTime.now, price: process[:p_price], payment_status: process[:payment_status], remarks: process[:remarks], status: process[:p_status]}
+    self.process[ self.process.length - 1] = { phase: self.process.last["phase"], datetime: DateTime.now, p_price: process[:p_price], payment_status: process[:payment_status], remarks: process[:remarks], p_status: process[:p_status]}
     self.save
   end
 
